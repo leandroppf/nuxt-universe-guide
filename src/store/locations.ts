@@ -1,9 +1,8 @@
 import { $axios } from '~/utils/api'
 
 interface LoadLocationsParams {
-  name?: string
-  type?: string
-  dimension?: string
+  search?: string
+  page?: number
 }
 
 const locationPath = '/api/location'
@@ -18,9 +17,10 @@ export const actions = {
     console.log('caiu')
     const queryParams = []
 
-    if (params?.name) queryParams.push(`name=${params?.name}`)
-    if (params?.type) queryParams.push(`type=${params?.type}`)
-    if (params?.dimension) queryParams.push(`dimension=${params?.dimension}`)
+    if (params?.page) queryParams.push(`page=${params?.page}`)
+    if (params?.search) {
+      queryParams.push([`name=${params?.search}`].join('&'))
+    }
 
     const url = `${locationPath}${
       queryParams.length ? `?${queryParams.join('&')}` : ''
