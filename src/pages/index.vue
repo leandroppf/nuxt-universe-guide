@@ -1,14 +1,17 @@
 <template>
   <section class="section">
     <b-field label="Nome">
-      <b-input
-        v-model="search"
-        icon="magnify"
-        class="mb-6"
-        lazy
-        @input="filterLocations"
-      />
+      <b-input v-model="search" icon="magnify" lazy @input="filterLocations" />
     </b-field>
+
+    <div v-if="loadingLocations" class="mb-6">
+      <b-skeleton width="20%" :active="loadingLocations" />
+    </div>
+    <div v-else class="mb-6">
+      <span class="is-size-7">
+        Regiões conhecidas: {{ responseInfo.count }}
+      </span>
+    </div>
 
     <div v-if="loadingLocations" class="columns is-multiline">
       <div
@@ -29,7 +32,6 @@
         :key="location.id"
         class="column is-one-quarter"
         :location="location"
-        :loading="loadingLocations"
         @click="handleClickLocation(location.id)"
       >
         Open source on <a href="https://github.com/buefy/buefy"> GitHub </a>

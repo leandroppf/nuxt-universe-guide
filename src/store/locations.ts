@@ -5,6 +5,10 @@ interface LoadLocationsParams {
   page?: number
 }
 
+interface LoadLocationByIdParams {
+  id: number | string
+}
+
 const locationPath = '/api/location'
 
 export const state = () => ({})
@@ -26,6 +30,17 @@ export const actions = {
     }`
 
     const response: UniverseLocationResponse = await $axios.$get(url)
+
+    return response
+  },
+
+  async loadLocationById(
+    _store: any,
+    params: LoadLocationByIdParams
+  ): Promise<UniverseLocation> {
+    const url = [locationPath, params?.id].join('/')
+
+    const response: UniverseLocation = await $axios.$get(url)
 
     return response
   },
