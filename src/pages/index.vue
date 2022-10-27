@@ -30,6 +30,7 @@
         class="column is-one-quarter"
         :location="location"
         :loading="loadingLocations"
+        @click="handleClickLocation(location.id)"
       >
         Open source on <a href="https://github.com/buefy/buefy"> GitHub </a>
       </LocationCard>
@@ -113,6 +114,10 @@ export default Vue.extend({
       this.page = 1
       this.search = search
       await this.fetchLocations(this.page, search)
+    },
+
+    handleClickLocation(locationId: number) {
+      this.$router.push(`/${locationId}`)
     },
   },
 })

@@ -14,7 +14,6 @@ export const actions = {
     _store: any,
     params: LoadLocationsParams
   ): Promise<UniverseLocationResponse> {
-    console.log('caiu')
     const queryParams = []
 
     if (params?.page) queryParams.push(`page=${params?.page}`)
