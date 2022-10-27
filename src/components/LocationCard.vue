@@ -1,6 +1,9 @@
 <template>
   <div class="column">
-    <div class="card card_container has-background-grey">
+    <div
+      class="card card_container has-background-grey"
+      @click="handleClickCard"
+    >
       <header class="card-header">
         <p class="card-header-title has-text-white has-text-weight-bold">
           {{ location.name }}
@@ -42,11 +45,24 @@ export default Vue.extend({
       required: true,
     },
   },
+
+  methods: {
+    handleClickCard() {
+      this.$emit('click')
+    },
+  },
 })
 </script>
 
 <style lang="scss" scoped>
 .card_container {
+  cursor: pointer;
+  transition: all 200ms;
+
+  &:hover {
+    margin-top: -0.5rem;
+  }
+
   .card_body {
     height: 14rem;
   }
