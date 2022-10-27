@@ -5,7 +5,7 @@ export default {
 
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
-    title: 'nuxt-repo-list',
+    title: 'nuxt-universe-guide',
     htmlAttrs: {
       lang: 'en',
     },
@@ -19,10 +19,10 @@ export default {
   },
 
   // Global CSS: https://go.nuxtjs.dev/config-css
-  css: [],
+  css: [{ src: '~/assets/css/app.scss' }],
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
-  plugins: [],
+  plugins: ['@/plugins/axios-accessor.ts'],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
   components: true,
@@ -33,12 +33,24 @@ export default {
     '@nuxt/typescript-build',
     // https://go.nuxtjs.dev/stylelint
     '@nuxtjs/stylelint-module',
+    '@nuxtjs/style-resources',
   ],
+
+  styleResources: {
+    scss: ['~/assets/css/app.scss'],
+  },
+
+  publicRuntimeConfig: {
+    axios: {
+      baseURL: 'https://rickandmortyapi.com',
+    },
+  },
 
   // Modules: https://go.nuxtjs.dev/config-modules
   modules: [
     // https://go.nuxtjs.dev/buefy
     'nuxt-buefy',
+    '@nuxtjs/axios',
   ],
 
   // Build Configuration: https://go.nuxtjs.dev/config-build

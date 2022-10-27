@@ -12,10 +12,11 @@
     "experimentalDecorators": true,
     "baseUrl": ".",
     "paths": {
-      "~/*": ["./*"],
-      "@/*": ["./*"]
+      "~/*": ["./src/*"],
+      "@/*": ["./src/*"]
     },
-    "types": ["@nuxt/types", "@types/node"]
+    "types": ["@nuxt/types", "@types/node", "@nuxtjs/axios", "buefy/types"],
+    "typeRoots": ["./src/types"]
   },
   "exclude": ["node_modules", ".nuxt", "dist"]
 }

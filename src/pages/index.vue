@@ -1,33 +1,61 @@
 <template>
   <section class="section">
-    <div class="columns is-mobile">
-      <card title="Free" icon="github">
+    <div class="columns is-multiline">
+      <LocationCard
+        v-for="location in locations"
+        :key="location.id"
+        class="column is-one-quarter"
+        :location="location"
+      >
         Open source on <a href="https://github.com/buefy/buefy"> GitHub </a>
-      </card>
-
-      <card title="Responsive" icon="cellphone-link">
-        <b class="has-text-grey"> Every </b> component is responsive
-      </card>
-
-      <card title="Modern" icon="alert-decagram">
-        Built with <a href="https://vuejs.org/"> Vue.js </a> and
-        <a href="http://bulma.io/"> Bulma </a>
-      </card>
-
-      <card title="Lightweight" icon="arrange-bring-to-front">
-        No other internal dependency
-      </card>
+      </LocationCard>
     </div>
+
+    <b-pagination />
   </section>
 </template>
 
-<script>
-import Card from '~/components/Card'
+<script lang="ts">
+import Vue from 'vue'
 
-export default {
-  name: 'IndexPage',
+import LocationCard from '~/components/LocationCard.vue'
+
+export default Vue.extend({
+  name: 'Locations',
   components: {
-    Card,
+    LocationCard,
   },
-}
+
+  data(): {
+    locations: UniverseLocation[]
+    loadingLocations: boolean
+    responseInfo: ResponseInfo
+  } {
+    return {
+      locations: [],
+      loadingLocations: true,
+      responseInfo: {} as ResponseInfo,
+    }
+  },
+
+  beforeMount() {
+    this.fetchLocations()
+  },
+
+  methods: {
+    async fetchLocations() {
+      try {
+        const response: UniverseLocationResponse = await this.$store.dispatch(
+          'locations/loadLocations'
+        )
+        this.locations = response.results
+        this.responseInfo = response.info
+      } catch (error) {
+        console.error(error)
+      } finally {
+        this.loadingLocations = false
+      }
+    },
+  },
+})
 </script>
