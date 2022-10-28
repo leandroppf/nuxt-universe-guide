@@ -9,15 +9,30 @@ interface LoadLocationByIdParams {
   id: number | string
 }
 
+interface LocationState {
+  page: number
+  search: string
+  universeLocationResponse: UniverseLocationResponse
+}
+
 const locationPath = '/api/location'
 
-export const state = () => ({})
+export const state = (): LocationState => ({
+  page: 1,
+  search: '',
+  universeLocationResponse: {} as UniverseLocationResponse,
+})
 
 export const actions = {
-  async loadLocations(
-    _store: any,
+  async loadLocationsCached(
+    store: any,
     params: LoadLocationsParams
-  ): Promise<UniverseLocationResponse> {
+  ): Promise<void> {
+    if (Object.keys(store.state.universeLocationResponse).length) return
+    await store.dispatch('loadLocations', params)
+  },
+
+  async loadLocations(store: any, params: LoadLocationsParams): Promise<void> {
     const queryParams = []
 
     if (params?.page) queryParams.push(`page=${params?.page}`)
@@ -31,7 +46,7 @@ export const actions = {
 
     const response: UniverseLocationResponse = await $axios.$get(url)
 
-    return response
+    store.commit('setUniverseLocationResponse', { response })
   },
 
   async loadLocationById(
@@ -43,5 +58,22 @@ export const actions = {
     const response: UniverseLocation = await $axios.$get(url)
 
     return response
+  },
+}
+
+export const mutations = {
+  setPage(state: LocationState, { page }: { page: number }) {
+    state.page = page
+  },
+
+  setSearch(state: LocationState, { search }: { search: string }) {
+    state.search = search
+  },
+
+  setUniverseLocationResponse(
+    state: LocationState,
+    { response }: { response: UniverseLocationResponse }
+  ) {
+    state.universeLocationResponse = response
   },
 }

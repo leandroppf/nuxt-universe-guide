@@ -9,7 +9,7 @@
     </div>
     <div v-else class="mb-6">
       <span class="is-size-7">
-        Regiões conhecidas: {{ responseInfo.count }}
+        Regiões conhecidas: {{ responseInfo?.count }}
       </span>
     </div>
 
@@ -40,7 +40,7 @@
 
     <b-pagination
       v-model="page"
-      :total="responseInfo.count"
+      :total="responseInfo?.count"
       :per-page="20"
       :range-after="3"
       :range-before="3"
@@ -66,39 +66,55 @@ export default Vue.extend({
   },
 
   data(): {
-    locations: UniverseLocation[]
     loadingLocations: boolean
-    responseInfo: ResponseInfo
-    page: number
-    search: string
   } {
     return {
-      locations: [],
       loadingLocations: true,
-      responseInfo: {} as ResponseInfo,
-      page: 1,
-      search: '',
     }
   },
 
+  computed: {
+    locations() {
+      return this.$store.state.locations.universeLocationResponse?.results
+    },
+
+    responseInfo() {
+      return this.$store.state.locations.universeLocationResponse?.info
+    },
+
+    page: {
+      get() {
+        return this.$store.state.locations.page
+      },
+      set(newPage) {
+        this.$store.commit('locations/setPage', { page: newPage })
+      },
+    },
+
+    search: {
+      get() {
+        return this.$store.state.locations.search
+      },
+      set(newSearch) {
+        this.$store.commit('locations/setSearch', { search: newSearch })
+      },
+    },
+  },
+
   beforeMount() {
-    this.fetchLocations()
+    this.fetchLocations(this.page, this.search, true)
   },
 
   methods: {
-    async fetchLocations(page?: number, search?: string) {
+    async fetchLocations(page?: number, search?: string, cache?: boolean) {
       try {
         this.loadingLocations = true
         const params = {} as any
         if (page) params.page = page
         if (search) params.search = search
 
-        const response: UniverseLocationResponse = await this.$store.dispatch(
-          'locations/loadLocations',
-          params
-        )
-        this.locations = response.results
-        this.responseInfo = response.info
+        const loadFunction = cache ? 'loadLocationsCached' : 'loadLocations'
+        await this.$store.dispatch(`locations/${loadFunction}`, params)
       } catch (error) {
         // eslint-disable-next-line no-console
         console.error(error)
